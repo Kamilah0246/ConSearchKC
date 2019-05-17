@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ConSearch</title>
+    <style>
+        body {background-color: powderblue;}
+        h1   {color: black;}
+        p    {color: rgb(99, 10, 110);}
+        </style>
 </head>
 <body>
 
@@ -29,14 +34,14 @@
 </body>
 
 <script
-  src="https://code.jquery.com/jquery-3.4.0.min.js"
-  integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbyMGWSFlBW8HfCJo="
   crossorigin="anonymous"></script>
   <script>
-    function searchBandsInTowns(artist)
+    function searchBandsInTown(artist)
     {
         //Querying the bands in the town api for the selected artist, the app-id parameteris required, but can equal to anything
-        var queryURL = "http://rest.bandsintown.com/artists/" + artist + "?app_id=codingbootcamp"; 
+        var queryURL = "http://rest.bandsintown.com/artists/" + artist + "?app_id=codindbootcamp"; 
 
         $.ajax({
             url: queryURL,
@@ -44,12 +49,39 @@
 
         }).done(function(response){
             //Printing the entire object to console
-            console.log(respond);
+            console.log(response);
 
             //Constructing HTML 
-        })
+            var artistName = $("<h1>").text(response.name);
+            var artistURL = $("<a>").attr("href", response.url).append(artistName);
+            var artistImage = $("<img>").attr("src", response.thumb_url);
+            var trackerCount = $("<h2>").text(response.tracker_count + "fans tracking this artist");
+            var upcomingEvents = $("<h2>").text(response.upcoming_event_count + "upcoming events");
+            var goToArtist = $("<a>").attr("href", response.url).text("See Tour Dates");
+
+            //Empty the contents of the Artist-div, append the new artist content
+            $("#artist-div").empty();
+            $("#artist-div").append(artistURL, artistImage, trackerCount, upcomingEvents, goToArtist);
+
+        });
 
     }
+
+    //Event handler for user clicking the select artist button
+    $("#select-artist").on("click", function(event){
+        
+        //Preventing the button from trying to submit the form 
+        event.preventDefault();
+
+        //Storing the artist name
+        var artist = $("#artist-input").val().trim();
+
+        //Running the searchBandinTown function (passing in the artist as an argument)
+        searchBandsInTown(artist);
+
+    })
+
+
   </script>
 
   
